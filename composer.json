@@ -1,0 +1,17 @@
+{
+    "name": "nickivanter/wp-ulike",
+    "type": "wordpress-plugin",
+    "require": {
+        "composer/installers": "^1.0"
+    },
+    "authors": [
+        {
+            "name": "Ali Mirzaei",
+            "email": "alimir71@gmail.com"
+        },
+        {
+            "name": "Denis Semenov",
+            "email": "nonamenerd@gmail.com"
+        }
+    ]
+}
