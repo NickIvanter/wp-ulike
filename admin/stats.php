@@ -211,6 +211,35 @@
 		echo '</div></div>';
 	}
 	
+	if($get_option['top_users'] == 1){
+		$get_top_users		= $wp_ulike_stats->get_top_users();
+		$top_users_counter  = 1;
+		echo'
+		<div class="postbox">
+		<div class="handlediv" title="Click to toggle"><br></div>
+		<h3 class="hndle"><span><i class="dashicons dashicons-awards"></i> '.__('Top Users',WP_ULIKE_SLUG) . '</span></h3>
+		<div class="inside">';
+
+		if ( $get_top_users ) {
+			foreach ($get_top_users as $top_user) {
+				$get_top_user_id 	= stripslashes($top_user->user_id);
+				$get_top_user_info 	= get_userdata($get_top_user_id);
+				$final_user_name	= __('Guest User',WP_ULIKE_SLUG);
+				if($get_top_user_info != '')
+					$final_user_name	= $get_top_user_info->display_name;
+				echo'
+			<div class="log-latest">
+			<div>
+			<span class="left-div log-page-title">'. $top_users_counter++ . ' - ' .$final_user_name.'</span>
+			<span class="right-div badge"><strong>'.$top_user->user_score.'</strong> '.__('Like',WP_ULIKE_SLUG) . '</span>
+			</div>
+			</div>
+			';
+			}
+		}
+		echo '</div></div>';
+	}
+
 	echo '</div></div></div>';
 	
 	
@@ -330,6 +359,7 @@
 		  'piechart_stats'			=> 1,
 		  'likers_map'				=> 1,
 		  'top_likers'				=> 1,
+		  'top_users'				=> 1,
 		  'days_number'				=> 20
 		);
 		update_option('wp_ulike_statistics_screen',$options);	
@@ -349,6 +379,7 @@
 				<label><input class="hide-postbox-tog" name="wp_ulike_piechart_stats" type="checkbox" value="1" <?php checked( '1', $get_option['piechart_stats'] ); ?>><?php echo _e('Likes Percent',WP_ULIKE_SLUG); ?></label>
 				<label><input class="hide-postbox-tog" name="wp_ulike_likers_map" type="checkbox" value="1" <?php checked( '1', $get_option['likers_map'] ); ?>><?php echo _e('Likers World Map',WP_ULIKE_SLUG); ?></label>
 				<label><input class="hide-postbox-tog" name="wp_ulike_top_likers" type="checkbox" value="1" <?php checked( '1', $get_option['top_likers'] ); ?>><?php echo _e('Top Likers',WP_ULIKE_SLUG); ?></label>
+				<label><input class="hide-postbox-tog" name="wp_ulike_top_users" type="checkbox" value="1" <?php checked( '1', $get_option['top_users'] ); ?>><?php echo _e('Top Users',WP_ULIKE_SLUG); ?></label>
 				<br class="clear">
 				<input step="1" min="5" max="60" class="screen-per-page" name="wp_ulike_days_number" maxlength="3" value="<?php echo $get_option['days_number']; ?>" type="number">
 				<label><?php echo _e('Days',WP_ULIKE_SLUG); ?></label>
@@ -384,6 +415,7 @@
 			  'piechart_stats'			=> isset($_POST['wp_ulike_piechart_stats']) 	? $_POST['wp_ulike_piechart_stats'] 	: 0,
 			  'likers_map'				=> isset($_POST['wp_ulike_likers_map']) 		? $_POST['wp_ulike_likers_map'] 		: 0,
 			  'top_likers'				=> isset($_POST['wp_ulike_top_likers']) 		? $_POST['wp_ulike_top_likers'] 		: 0,
+			  'top_users'				=> isset($_POST['wp_ulike_top_users'])			? $_POST['wp_ulike_top_users'] 			: 0,
 			  'days_number'				=> isset($_POST['wp_ulike_days_number']) 		? $_POST['wp_ulike_days_number'] 		: 20
 			);
 			update_option( 'wp_ulike_statistics_screen', $options );

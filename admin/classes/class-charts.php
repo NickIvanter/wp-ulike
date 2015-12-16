@@ -285,6 +285,72 @@ if ( ! class_exists( 'wp_ulike_stats' ) ) {
 					ORDER BY SumUser DESC LIMIT 10
 					";
 		return $this->wpdb->get_results($request);
+        }
+
+		// havylifting
+		public function get_user_score( $user_id )
+		{
+			return $this->wpdb->get_var(
+				$this->wpdb->prepare(
+					"SELECT SUM(likes.cnt) FROM (
+SELECT COUNT(p.post_author) AS cnt FROM {$this->wpdb->prefix}ulike AS up JOIN {$this->wpdb->posts} AS p ON p.ID=up.post_id WHERE up.status='like' AND p.post_author = %d
+UNION ALL
+SELECT COUNT(p.post_author) AS cnt FROM {$this->wpdb->prefix}ulike_forums AS uf JOIN {$this->wpdb->posts} AS p ON p.ID=uf.topic_id WHERE uf.status='like' AND p.post_author = %d
+UNION ALL
+SELECT COUNT(c.user_id) AS cnt FROM {$this->wpdb->prefix}ulike_comments AS uc JOIN {$this->wpdb->comments} AS c ON c.comment_ID=uc.comment_id WHERE uc.status='like' AND c.user_id = %d
+) AS likes",
+					$user_id, $user_id, $user_id
+				)
+			);
+		}
+
+		// havylifting plus
+		public function get_users_with_score_more_than( $theshold, $limit = false )
+		{
+			$theshold = (int) $theshold;
+			$sql = "SELECT likes.uid AS user_id, SUM(likes.cnt) AS user_score FROM (
+SELECT COUNT(p.post_author) AS cnt, p.post_author AS uid FROM {$this->wpdb->prefix}ulike AS up JOIN {$this->wpdb->posts} AS p ON p.ID=up.post_id WHERE up.status='like' GROUP BY uid
+UNION ALL
+SELECT COUNT(p.post_author) AS cnt, p.post_author AS uid FROM {$this->wpdb->prefix}ulike_forums AS uf JOIN {$this->wpdb->posts} AS p ON p.ID=uf.topic_id WHERE uf.status='like' GROUP BY uid
+UNION ALL
+SELECT COUNT(c.user_id) AS cnt, c.user_id AS uid FROM {$this->wpdb->prefix}ulike_comments AS uc JOIN {$this->wpdb->comments} AS c ON c.comment_ID=uc.comment_id WHERE uc.status='like' GROUP BY uid
+) AS likes GROUP BY user_id HAVING user_score > %d ORDER BY user_score DESC";
+			if ( $limit ) {
+				$limit = (int) $limit;
+				return $this->wpdb->get_results( $this->wpdb->prepare( $sql . " LIMIT %d" , $theshold, $limit ) );
+			}
+			return $this->wpdb->get_results( $this->wpdb->prepare( $sql, $theshold ) );
+		}
+
+		public function get_top_users()
+		{
+			$theshold = wp_ulike_get_setting( 'wp_ulike_mailing', 'top_users_threshold' );
+			if ( $theshold ) {
+				return $this->get_users_with_score_more_than( $theshold, 10 );
+			}
+			return false;
+		}
+
+		// fatality combo of unspeakable abomination
+		public function get_users_we_should_prize( $theshold )
+		{
+			return $this->wpdb->get_results(
+				$this->wpdb->prepare(
+					"SELECT DISTINCT top.user_id as user_id, top.user_score AS score FROM (
+SELECT likes.uid AS user_id, SUM(likes.cnt) AS user_score FROM (
+	SELECT COUNT(p.post_author) AS cnt, p.post_author AS uid FROM {$this->wpdb->prefix}ulike AS up JOIN {$this->wpdb->posts} AS p ON p.ID=up.post_id WHERE up.status='like' GROUP BY uid
+	UNION ALL
+	SELECT COUNT(p.post_author) AS cnt, p.post_author AS uid FROM {$this->wpdb->prefix}ulike_forums AS uf JOIN {$this->wpdb->posts} AS p ON p.ID=uf.topic_id WHERE uf.status='like' GROUP BY uid
+	UNION ALL
+	SELECT COUNT(c.user_id) AS cnt, c.user_id AS uid FROM {$this->wpdb->prefix}ulike_comments AS uc JOIN {$this->wpdb->comments} AS c ON c.comment_ID=uc.comment_id WHERE uc.status='like' GROUP BY uid
+	) AS likes GROUP BY user_id HAVING user_score > %d
+) AS top JOIN {$this->wpdb->usermeta} AS meta ON meta.user_id=top.user_id
+WHERE EXISTS (SELECT * FROM {$this->wpdb->usermeta} WHERE meta_key='_ulike_prized' AND meta_value='false')
+OR NOT EXISTS (SELECT * FROM {$this->wpdb->usermeta} WHERE meta_key='_ulike_prized')
+",
+					$theshold
+				)
+			);
 		}
 		
 	}
