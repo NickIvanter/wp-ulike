@@ -16,7 +16,7 @@
 	 * @return			String
 	 */	
 	function wp_ulike_statistics(){
-	global $wp_ulike_stats;	
+	global $wp_ulike_stats, $wp_ulike_class;
 	$get_option  = get_option( 'wp_ulike_statistics_screen' );
 	
 	echo '<div class="wrap">';
@@ -212,7 +212,7 @@
 	}
 	
 	if($get_option['top_users'] == 1){
-		$get_top_users		= $wp_ulike_stats->get_top_users();
+		$get_top_users		= $wp_ulike_class->get_top_users();
 		$top_users_counter  = 1;
 		echo'
 		<div class="postbox">

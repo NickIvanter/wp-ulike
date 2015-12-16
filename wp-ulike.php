@@ -19,6 +19,9 @@ define( 'WP_ULIKE_DB_VERSION'   , '1.3' );
 //Load Translations
 load_plugin_textdomain( WP_ULIKE_SLUG, false, dirname( plugin_basename( __FILE__ ) ) .'/lang/' );
 
+//Load WP ULike mailing
+require_once plugin_dir_path( __FILE__ ) . 'inc/wp-mailing.php';
+
 /**
  * When the plugin is activated, This function will install wp_ulike tables in database (If not exist table)
  *
@@ -103,6 +106,8 @@ function wp_ulike_install() {
 		update_option( 'wp_ulike_dbVersion', WP_ULIKE_DB_VERSION );
 	}
 	
+	// Would it work? Hope so...
+	wp_schedule_event( current_time( 'timestamp' ), 'hourly', 'wp_ulike_mailing' );
 }
 
 
@@ -175,3 +180,18 @@ include plugin_dir_path( __FILE__ ) . 'inc/wp-script.php';
 
 //Load WP ULike functions
 include plugin_dir_path( __FILE__ ) . 'inc/wp-ulike.php';
+
+// bbPress profile score
+add_action( 'bbp_template_after_user_profile', 'ulike_bbp_add_scores_in_profile' );
+function ulike_bbp_add_scores_in_profile() {
+	global $wp_ulike_class;
+
+	$user_id = bbp_get_displayed_user_id();
+
+	$score = $wp_ulike_class->get_user_score( $user_id );
+	echo "<div class=\"ulike-section bbp-user-section\"><p>Лайки: <span class=\"\">$score</span></p></div>";
+}
+
+
+// FIXME For debug only
+//add_action( 'wp_head', 'wp_ulike_mailing' );
