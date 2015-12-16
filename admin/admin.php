@@ -65,6 +65,8 @@
 	include( plugin_dir_path(__FILE__) . 'classes/class-settings.php' );
 	//include setting templates
 	include( plugin_dir_path(__FILE__) . 'classes/tmp/settings.php' );		
+    //include mailing settings template
+    include( plugin_dir_path(__FILE__) . 'classes/tmp/mailing.php' );
 
 	//activate general setting panel
 	$wp_ulike_setting = wp_ulike_create_settings_page(
@@ -90,8 +92,9 @@
 	  'wp_ulike_comments' 	=> $wp_ulike_comments,
 	  'wp_ulike_buddypress' => $wp_ulike_buddypress,
 	  'wp_ulike_bbpress' 	=> $wp_ulike_bbpress,
-	  'wp_ulike_customize' 	=> $wp_ulike_customize
-	) );
+      'wp_ulike_customize' 	=> $wp_ulike_customize,
+      'wp_ulike_mailing' 	=> $wp_ulike_mailing
+    ) );
 
 	
 	function wp_ulike_delete_all_logs() {
