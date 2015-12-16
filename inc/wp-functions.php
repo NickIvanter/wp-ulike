@@ -142,6 +142,7 @@
 	 * @param           String $content	 
 	 * @since           1.7		 
 	 * @updated         2.1	 
+	 * @updated         2.4 
 	 * @return          filter on "bp_get_activity_action"
 	 */
 	if (wp_ulike_get_setting( 'wp_ulike_buddypress', 'auto_display' ) == '1') {
@@ -149,10 +150,14 @@
 			echo wp_ulike_buddypress('put');
 		}
 		
-		if (wp_ulike_get_setting( 'wp_ulike_buddypress', 'auto_display_position' ) == 'meta')
+		if (wp_ulike_get_setting( 'wp_ulike_buddypress', 'auto_display_position' ) == 'meta'){
 		add_action( 'bp_activity_entry_meta', 'wp_ulike_put_buddypress' );
+        }
 		else	
 		add_action( 'bp_activity_entry_content', 'wp_ulike_put_buddypress' );
+        
+        if (wp_ulike_get_setting( 'wp_ulike_buddypress', 'activity_comment' ) == '1')
+        add_action( 'bp_activity_comment_options', 'wp_ulike_put_buddypress' );        
 
 	}
 	
@@ -169,7 +174,7 @@
 		bp_activity_set_action(
 			$bp->activity->id,
 			'wp_like_group',
-			__( 'WP ULike Activity', 'alimir' )
+			__( 'WP ULike Activity', WP_ULIKE_SLUG )
 		);
 	}
 	
@@ -299,8 +304,8 @@
 		add_filter( 'mycred_setup_hooks', 'wp_ulike_register_myCRED_hook' );
 		function wp_ulike_register_myCRED_hook( $installed ) {
 			$installed['wp_ulike'] = array(
-				'title'       => __( 'WP ULike', 'alimir' ),
-				'description' => __( 'This hook award / deducts points from users who Like/Unlike any content of WordPress, bbPress, BuddyPress & ...', 'alimir' ),
+				'title'       => __( 'WP ULike', WP_ULIKE_SLUG ),
+				'description' => __( 'This hook award / deducts points from users who Like/Unlike any content of WordPress, bbPress, BuddyPress & ...', WP_ULIKE_SLUG ),
 				'callback'    => array( 'wp_ulike_myCRED' )
 			);
 			return $installed;
@@ -308,10 +313,10 @@
 		
 		add_filter( 'mycred_all_references', 'wp_ulike_myCRED_references' );
 		function wp_ulike_myCRED_references( $hooks ) {
-			$hooks['wp_add_like'] 	= __( 'Liking Content', 'alimir' );
-			$hooks['wp_get_like'] 	= __( 'Liked Content', 'alimir' );
-			$hooks['wp_add_unlike'] = __( 'Unliking Content', 'alimir' );
-			$hooks['wp_get_unlike'] = __( 'Unliked Content', 'alimir' );
+			$hooks['wp_add_like'] 	= __( 'Liking Content', WP_ULIKE_SLUG );
+			$hooks['wp_get_like'] 	= __( 'Liked Content', WP_ULIKE_SLUG );
+			$hooks['wp_add_unlike'] = __( 'Unliking Content', WP_ULIKE_SLUG );
+			$hooks['wp_get_unlike'] = __( 'Unliked Content', WP_ULIKE_SLUG );
 			return $hooks;
 		}
 	}
@@ -333,12 +338,12 @@
 		function wp_ulike_add_custom_profile_tab( $tabs ) {
 			
 			$tabs['wp-ulike-posts'] = array(
-				'name' => __('Recent Posts Liked','alimir'),
+				'name' => __('Recent Posts Liked',WP_ULIKE_SLUG),
 				'icon' => 'um-faicon-thumbs-up',
 			);
 				
 			$tabs['wp-ulike-comments'] = array(
-				'name' => __('Recent Comments Liked','alimir'),
+				'name' => __('Recent Comments Liked',WP_ULIKE_SLUG),
 				'icon' => 'um-faicon-thumbs-o-up',
 			);
 				
@@ -367,7 +372,7 @@
 			$user_logs = $wp_ulike_class->get_current_user_likes($args);
 			
 			if($user_logs != null){
-				echo '<div class="um-profile-note"><span>'. __('Recent Posts Liked','alimir').'</span></div>';
+				echo '<div class="um-profile-note"><span>'. __('Recent Posts Liked',WP_ULIKE_SLUG).'</span></div>';
 				foreach ($user_logs as $user_log) {
 					$get_post 	= get_post(stripslashes($user_log->post_id));
 					$get_date 	= $user_log->date_time;
@@ -383,7 +388,7 @@
 						  </div>';
 					echo '</div>';
 				}
-			} else echo '<div style="display: block;" class="um-profile-note"><i class="um-faicon-frown-o"></i><span>'. __('This user has not made any likes.','alimir').'</span></div>';
+			} else echo '<div style="display: block;" class="um-profile-note"><i class="um-faicon-frown-o"></i><span>'. __('This user has not made any likes.',WP_ULIKE_SLUG).'</span></div>';
 		}	
 
 		/**
@@ -407,7 +412,7 @@
 			$user_logs = $wp_ulike_class->get_current_user_likes($args);
 			
 			if($user_logs != null){
-				echo '<div class="um-profile-note"><span>'. __('Recent Comments Liked','alimir').'</span></div>';
+				echo '<div class="um-profile-note"><span>'. __('Recent Comments Liked',WP_ULIKE_SLUG).'</span></div>';
 				foreach ($user_logs as $user_log) {
 					$comment 	= get_comment(stripslashes($user_log->comment_id));
 					$get_date 	= $user_log->date_time;
@@ -424,7 +429,7 @@
 						  </div>';
 					echo '</div>';
 				}
-			} else echo '<div style="display: block;" class="um-profile-note"><i class="um-faicon-frown-o"></i><span>'. __('This user has not made any likes.','alimir').'</span></div>';
+			} else echo '<div style="display: block;" class="um-profile-note"><i class="um-faicon-frown-o"></i><span>'. __('This user has not made any likes.',WP_ULIKE_SLUG).'</span></div>';
 		}
 	}
 
@@ -468,6 +473,7 @@
 	 * @author       	Alimir
 	 * @since           1.3
 	 * @updated         2.3
+	 * @updated         2.4
 	 * @return          Void (Print new CSS styles)
 	 */
 	function wp_ulike_get_custom_style(){
@@ -521,12 +527,10 @@
 		}			
 		if($counter_border != ''){
 			$counter_style .= "border-color:$counter_border; ";
+            $before_style  = "border-color:transparent; border-bottom-color:$counter_border; border-left-color:$counter_border;";
 		}			
 		if($counter_color != ''){
 			$counter_style .= "color:$counter_color;";
-		}
-		if($counter_color != ''){
-			$before_style  .= "border-color:transparent; border-bottom-color:$counter_border; border-left-color:$counter_border;";
 		}
 		
 		}

@@ -4,8 +4,8 @@ Donate link: http://alimir.ir
 Author: Ali Mirzaei
 Tags: wp ulike, wordpress youlike plugin, like button, rating, vote, voting, most liked posts, wordpress like page, wordpress like post, wordpress vote page, wordpress vote post, wp like page, wp like post, wp like plugin, buddypress like system, buddypress votes, comment like system, voting button, wordpress, buddypress, statistics, stats likes, bbpress, bbPress like, WP-Translations, forums, community, credit, points, mycred, users, ultimate member
 Requires at least: 3.5
-Tested up to: 4.2.2
-Stable tag: 2.3
+Tested up to: 4.3.1
+Stable tag: 2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ WP ULike enables you to add Ajax Like button into your WP and allowing your visi
 
 == Description ==
 
-WP ULike plugin allows to integrate a beautiful Ajax Like Button into your wordPress website to allow your visitors to like and unlike pages, posts, comments, buddypress activities & bbPress Topics. Its very simple to use and supports many options + full Statistics tools. And all of these are free :)
+WP ULike plugin allows to integrate a beautiful Ajax Like Button into your wordPress website to allow your visitors to like and unlike pages, posts, comments, buddypress activities+comments and bbPress topics. Its very simple to use and supports many options + full Statistics tools. And all of these are free :)
 
 = More Information =
 *   Visit Our <a target="_blank" href="http://preview.alimir.ir/developer/wp-ulike/">Home Page</a>.
@@ -23,10 +23,10 @@ WP ULike plugin allows to integrate a beautiful Ajax Like Button into your wordP
 
 = Features =
 *   Clean Design.
-*   Full myCRED Points Support. (NEW)
+*   Full myCRED Points Support.
 *   Full Statistics tools.
-*   Supporting UltimateMember & BuddyPress Profiles. (NEW)
-*  	Likers World Map & Top Likers Widget. (NEW)
+*   Supporting UltimateMember & BuddyPress Profiles.
+*  	Likers World Map & Top Likers Widget.
 *   Ajax feature to update the data without reloading.
 *   Visitors do not have to register or log in to use the Like Button.
 *   Compatible with WP version 3.5 & above.
@@ -41,7 +41,7 @@ WP ULike plugin allows to integrate a beautiful Ajax Like Button into your wordP
 *   Simple user like box with avatar support.
 *   Custom Like-UnLike Texts fields.
 *   Simple custom style with color picker settings.
-*   Advanced Widgets With Custom Tools. (Most Liked Posts,Comments,Users,...)
+*   Advanced Widgets With Custom Tools. (Most Liked Posts,Comments,Users,Topics,...)
 *   Powerful configuration panel.
 *   Support RTL & language file.
 *   And so on...
@@ -91,14 +91,27 @@ Would you like to help translate the plugin into more languages? [Join our WP-Tr
 *   My personal website: <a href="http://about.alimir.ir" target="_blank">Ali Mirzaei</a>
 *   Follow me on <a href="https://www.facebook.com/alimir1993" target="_blank">Facebook</a>
 *   Catch me on twitter as @alimirir
-*   And Follow My Instagram Activities With <a href="https://instagram.com/alimir71/" target="_blank">Alimir71</a>
+*   And Connect me on <a href="https://ir.linkedin.com/in/alimirir" target="_blank">Linkedin</a>
 
 == Installation ==
 
-1. Open `wp-content/plugins` Folder
-2. Put: `Folder: wp-ulike`
-3. Activate `WP ULike` Plugin
-4. Go to `WP-Admin -> WP ULike`
+= From your WordPress dashboard =
+
+1. Visit 'Plugins > Add New'
+2. Search for 'WP ULike'
+3. Activate 'WP ULike' from your Plugins page. (You will be greeted with a Welcome page.)
+
+= From WordPress.org =
+
+1. Download 'WP ULike'.
+2. Upload the 'WP ULike' directory to your '/wp-content/plugins/' directory, using your favorite method (ftp, sftp, scp, etc...)
+3. Activate 'WP ULike' from your Plugins page. (You will be greeted with a Welcome page.)
+
+= Once Activated =
+
+1. Visit 'WP ULike > Settings' and take a moment to match ULike's settings to your expectations. We pick the most common configuration by default, but every taste is different.
+2. Visit 'WP ULike > Statistics' and observe your likes stats with useful statistics tools such as "Line charts", "Pie Chart", "World Map" and "Summary Details".
+3. If you have already installed myCRED plugin, Visit 'myCRED > hooks' and enable 'wp ulike' hook to award / deducts points from users who Like/Unlike any content of WordPress, bbPress, BuddyPress and etc.
 
 == Screenshots ==
 
@@ -165,6 +178,22 @@ endif;
 
 == Changelog ==
 
+= 2.4 =
+* Added: Buddypress comments support in activity stream.
+* Added: Widget period option. (All, Year, Month, Week, Yesterday, Today).
+* Fixed: Small bug with bbPress replys.
+* Fixed: bbPress ulike widget bug with reply title.
+* Fixed: Activities widget problem in multisite mode.
+* Fixed: Custom style settings for RTL mode.
+* Fixed: Buddypress widget options. (such as title trim and content permalink)
+* Changed: Languages text domain from 'alimir' to 'wp-ulike'. (Important for translators)
+* Changed: Widget functions input to array.
+* Removed: 'wp_ulike_get_version' function and replced it with WP_ULIKE_VERSION constant.
+* Removed: wp-ulike-rtl.css file and mixed it with wp-ulike.css
+* Updated: French Language File.
+* Updated: Persian Language File.
+* Updated: About Page Information.
+
 = 2.3 =
 * Added: Full myCRED Support. (Special Thanks to the Gabriel Lemarie)
 * Added: "Recent Posts/Comments Liked" tab in the UltimateMember profile menu.
@@ -176,6 +205,7 @@ endif;
 * Added: New Widget Options. (Style, Title Trim, Show Thumbnail/Avatar, Profile URL, ...)
 * Added: Unlike icon/text option.
 * Added: Custom CSS option.
+* Added: Most Liked Topics Widget.
 * Fixes: HTML code support in the settings pages. (Such as using font-awesome in the like button)
 * Fixes: Removing the user avatar in the likers box. (after the unlike)
 * Fixes: Small Bugs.
@@ -319,6 +349,9 @@ endif;
 * The initial version
 
 == Upgrade Notice ==
+
+= 2.4 =
+Hey Guys. Approximately 5 months, We haven't had any update! Yeah It's a long time :( The reason for this delay was my misery business and busy time of working on my final thesis in university. I apologize for this delay and unanswered support requests in wordpress forums and sented emails. Finally, I found a free time to working on "WP ULike" & some other of my plugins and answer the support requests. The first release of this work is WP ULike 2.4 with some new options and bug fixes. Hope to enjoy this version and I really excited to working on the premium version of WP ULike with many amazing abilitites as soon as possible. Best regards, Alimir.
 
 = 2.3 =
 In this version, we made some changes in the plugin scripts (wp-ulike-scripts.js)! So, please clear your browser cache after the plugin update. Also, After the plugin update If the new database table won't fixed, try deactivating the plugin and reactivating that one at a time.

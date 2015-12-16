@@ -14,7 +14,7 @@
 	function wp_ulike_logs_per_page() {
 		$option = 'per_page';
 		$args = array(
-			'label' => __('Logs','alimir'),
+			'label' => __('Logs',WP_ULIKE_SLUG),
 			'default' => 20,
 			'option' => 'wp_ulike_logs_per_page'
 		);
@@ -77,7 +77,7 @@
 		//localize script
 		wp_localize_script( 'wp_ulike_logs', 'wp_ulike_logs', array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
-			'message' => __('Are you sure to remove this item?!','alimir')
+			'message' => __('Are you sure to remove this item?!',WP_ULIKE_SLUG)
 		));
 		
 	}
@@ -135,25 +135,25 @@
 		
 	?>
 	<div class="wrap">
-		<h2><?php _e('WP ULike Logs', 'alimir'); ?></h2>
-		<h3><?php _e('Post Likes Logs', 'alimir'); ?></h3>
+		<h2><?php _e('WP ULike Logs', WP_ULIKE_SLUG); ?></h2>
+		<h3><?php _e('Post Likes Logs', WP_ULIKE_SLUG); ?></h3>
 		<div class="tablenav">
 			<div class='tablenav-pages'>
-				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs','alimir'); ?></span>
+				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs',WP_ULIKE_SLUG); ?></span>
 				<?php echo $p->show();  // Echo out the list of paging. ?>
 			</div>
 		</div>
 		<table class="widefat">
 			<thead>
 				<tr>
-					<th width="2%"><?php _e('ID', 'alimir'); ?></th>
-					<th width="10%"><?php _e('Username', 'alimir'); ?></th>
-					<th><?php _e('Status', 'alimir'); ?></th>
-					<th width="6%"><?php _e('Post ID', 'alimir'); ?></th>
-					<th><?php _e('Post Title', 'alimir'); ?></th>
-					<th width="20%"><?php _e('Date / Time', 'alimir'); ?></th>
-					<th><?php _e('IP', 'alimir'); ?></th>
-					<th><?php _e('Actions', 'alimir'); ?></th>
+					<th width="2%"><?php _e('ID', WP_ULIKE_SLUG); ?></th>
+					<th width="10%"><?php _e('Username', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('Status', WP_ULIKE_SLUG); ?></th>
+					<th width="6%"><?php _e('Post ID', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('Post Title', WP_ULIKE_SLUG); ?></th>
+					<th width="20%"><?php _e('Date / Time', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('IP', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('Actions', WP_ULIKE_SLUG); ?></th>
 				</tr>
 			</thead>
 			<tbody class="wp_ulike_logs">
@@ -171,7 +171,7 @@
 				if($user_info)
 				echo get_avatar( $user_info->user_email, 16, '' , 'avatar') . '<em> @' . $user_info->user_login . '</em>';
 				else
-				echo '<em> #'. __('Guest User','alimir') .'</em>';
+				echo '<em> #'. __('Guest User',WP_ULIKE_SLUG) .'</em>';
 				?>
 				</td>
 				<td>
@@ -209,14 +209,14 @@
 		</table>
 		<div class="tablenav">
 			<div class='tablenav-pages'>
-				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs','alimir'); ?></span>
+				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs',WP_ULIKE_SLUG); ?></span>
 				<?php echo $p->show();  // Echo out the list of paging. ?>
 			</div>
 		</div>
 	</div>
 	<?php
 		} else {
-			echo "<div class='error'><p>" . __('<strong>ERROR:</strong> No Record Found. (This problem is created because you don\'t have any data on this table)','alimir') . "</p></div>";
+			echo "<div class='error'><p>" . __('<strong>ERROR:</strong> No Record Found. (This problem is created because you don\'t have any data on this table)',WP_ULIKE_SLUG) . "</p></div>";
 		}
 	}
 	
@@ -256,26 +256,26 @@
 		$get_ulike_logs = $wpdb->get_results("SELECT * FROM ".$wpdb->prefix."ulike_comments ORDER BY id DESC ".$limit."");
 	?>
 	<div class="wrap">
-		<h2><?php _e('WP ULike Logs', 'alimir'); ?></h2>
-		<h3><?php _e('Comment Likes Logs', 'alimir'); ?></h3>
+		<h2><?php _e('WP ULike Logs', WP_ULIKE_SLUG); ?></h2>
+		<h3><?php _e('Comment Likes Logs', WP_ULIKE_SLUG); ?></h3>
 		<div class="tablenav">
 			<div class='tablenav-pages'>
-				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs','alimir'); ?></span>
+				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs',WP_ULIKE_SLUG); ?></span>
 				<?php echo $p->show();  // Echo out the list of paging. ?>
 			</div>
 		</div>	
 		<table class="widefat">
 			<thead>
 				<tr>
-					<th width="2%"><?php _e('ID', 'alimir'); ?></th>
-					<th width="10%"><?php _e('Username', 'alimir'); ?></th>
-					<th width="5%"><?php _e('Status', 'alimir'); ?></th>
-					<th width="6%"><?php _e('Comment ID', 'alimir'); ?></th>
-					<th><?php _e('Comment Author', 'alimir'); ?></th>
-					<th><?php _e('Comment Text', 'alimir'); ?></th>
-					<th width="20%"><?php _e('Date / Time', 'alimir'); ?></th>
-					<th><?php _e('IP', 'alimir'); ?></th>
-					<th><?php _e('Actions', 'alimir'); ?></th>					
+					<th width="2%"><?php _e('ID', WP_ULIKE_SLUG); ?></th>
+					<th width="10%"><?php _e('Username', WP_ULIKE_SLUG); ?></th>
+					<th width="5%"><?php _e('Status', WP_ULIKE_SLUG); ?></th>
+					<th width="6%"><?php _e('Comment ID', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('Comment Author', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('Comment Text', WP_ULIKE_SLUG); ?></th>
+					<th width="20%"><?php _e('Date / Time', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('IP', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('Actions', WP_ULIKE_SLUG); ?></th>					
 				</tr>
 			</thead>
 			<tbody>
@@ -293,7 +293,7 @@
 				if($user_info)
 				echo get_avatar( $user_info->user_email, 16, '' , 'avatar') . '<em> @' . $user_info->user_login . '</em>';
 				else
-				echo '<em> #'. __('Guest User','alimir') .'</em>';
+				echo '<em> #'. __('Guest User',WP_ULIKE_SLUG) .'</em>';
 				?>
 				</td>
 				<td>
@@ -334,7 +334,7 @@
 		</table>
 		<div class="tablenav">
 			<div class='tablenav-pages'>
-				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs','alimir'); ?></span>
+				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs',WP_ULIKE_SLUG); ?></span>
 				<?php echo $p->show();  // Echo out the list of paging. ?>
 			</div>
 		</div>
@@ -342,7 +342,7 @@
 	
 	<?php
 		} else {
-			echo "<div class='error'><p>" . __('<strong>ERROR:</strong> No Record Found. (This problem is created because you don\'t have any data on this table)','alimir') . "</p></div>";
+			echo "<div class='error'><p>" . __('<strong>ERROR:</strong> No Record Found. (This problem is created because you don\'t have any data on this table)',WP_ULIKE_SLUG) . "</p></div>";
 		}
 	}
 
@@ -383,25 +383,25 @@
 		
 	?>
 		<div class="wrap">
-			<h2><?php _e('WP ULike Logs', 'alimir'); ?></h2>
-			<h3><?php _e('Activity Likes Logs', 'alimir'); ?></h3>
+			<h2><?php _e('WP ULike Logs', WP_ULIKE_SLUG); ?></h2>
+			<h3><?php _e('Activity Likes Logs', WP_ULIKE_SLUG); ?></h3>
 			<div class="tablenav">
 				<div class='tablenav-pages'>
-					<span class="displaying-num"><?php echo $items . ' ' .  __('Logs','alimir'); ?></span>
+					<span class="displaying-num"><?php echo $items . ' ' .  __('Logs',WP_ULIKE_SLUG); ?></span>
 					<?php echo $p->show();  // Echo out the list of paging. ?>
 				</div>
 			</div>
 			<table class="widefat">
 				<thead>
 					<tr>
-						<th width="3%"><?php _e('ID', 'alimir'); ?></th>
-						<th width="13%"><?php _e('Username', 'alimir'); ?></th>
-						<th><?php _e('Status', 'alimir'); ?></th>
-						<th width="6%"><?php _e('Activity ID', 'alimir'); ?></th>
-						<th><?php _e('Permalink', 'alimir'); ?></th>
-						<th><?php _e('Date / Time', 'alimir'); ?></th>
-						<th><?php _e('IP', 'alimir'); ?></th>
-						<th><?php _e('Actions', 'alimir'); ?></th>	
+						<th width="3%"><?php _e('ID', WP_ULIKE_SLUG); ?></th>
+						<th width="13%"><?php _e('Username', WP_ULIKE_SLUG); ?></th>
+						<th><?php _e('Status', WP_ULIKE_SLUG); ?></th>
+						<th width="6%"><?php _e('Activity ID', WP_ULIKE_SLUG); ?></th>
+						<th><?php _e('Permalink', WP_ULIKE_SLUG); ?></th>
+						<th><?php _e('Date / Time', WP_ULIKE_SLUG); ?></th>
+						<th><?php _e('IP', WP_ULIKE_SLUG); ?></th>
+						<th><?php _e('Actions', WP_ULIKE_SLUG); ?></th>	
 					</tr>
 				</thead>
 				<tbody>
@@ -419,7 +419,7 @@
 					if($user_info)
 					echo get_avatar( $user_info->user_email, 16, '' , 'avatar') . '<em> @' . $user_info->user_login . '</em>';
 					else
-					echo '<em> #'. __('Guest User','alimir') .'</em>';
+					echo '<em> #'. __('Guest User',WP_ULIKE_SLUG) .'</em>';
 					?>
 					</td>
 					<td>
@@ -435,7 +435,7 @@
 					<?php echo $get_ulike_log->activity_id; ?>
 					</td>
 					<td>
-					<?php printf( __( '<a href="%1$s">Activity Permalink</a>', 'alimir' ), bp_activity_get_permalink( $get_ulike_log->activity_id ) ); ?>
+					<?php printf( __( '<a href="%1$s">Activity Permalink</a>', WP_ULIKE_SLUG ), bp_activity_get_permalink( $get_ulike_log->activity_id ) ); ?>
 					</td>
 					<td>
 					<?php
@@ -457,7 +457,7 @@
 			</table>
 			<div class="tablenav">
 				<div class='tablenav-pages'>
-					<span class="displaying-num"><?php echo $items . ' ' .  __('Logs','alimir'); ?></span>
+					<span class="displaying-num"><?php echo $items . ' ' .  __('Logs',WP_ULIKE_SLUG); ?></span>
 					<?php echo $p->show();  // Echo out the list of paging. ?>
 				</div>
 			</div>
@@ -465,7 +465,7 @@
 		
 	<?php
 		} else {
-			echo "<div class='error'><p>" . __('<strong>ERROR:</strong> No Record Found. (This problem is created because you don\'t have any data on this table)','alimir') . "</p></div>";
+			echo "<div class='error'><p>" . __('<strong>ERROR:</strong> No Record Found. (This problem is created because you don\'t have any data on this table)',WP_ULIKE_SLUG) . "</p></div>";
 		}	
 	}
 	
@@ -505,25 +505,25 @@
 		
 	?>
 	<div class="wrap">
-		<h2><?php _e('WP ULike Logs', 'alimir'); ?></h2>
-		<h3><?php _e('Topics Likes Logs', 'alimir'); ?></h3>
+		<h2><?php _e('WP ULike Logs', WP_ULIKE_SLUG); ?></h2>
+		<h3><?php _e('Topics Likes Logs', WP_ULIKE_SLUG); ?></h3>
 		<div class="tablenav">
 			<div class='tablenav-pages'>
-				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs','alimir'); ?></span>
+				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs',WP_ULIKE_SLUG); ?></span>
 				<?php echo $p->show();  // Echo out the list of paging. ?>
 			</div>
 		</div>
 		<table class="widefat">
 			<thead>
 				<tr>
-					<th width="2%"><?php _e('ID', 'alimir'); ?></th>
-					<th width="10%"><?php _e('Username', 'alimir'); ?></th>
-					<th><?php _e('Status', 'alimir'); ?></th>
-					<th width="6%"><?php _e('Topic ID', 'alimir'); ?></th>
-					<th><?php _e('Topic Title', 'alimir'); ?></th>
-					<th width="20%"><?php _e('Date / Time', 'alimir'); ?></th>
-					<th><?php _e('IP', 'alimir'); ?></th>
-					<th><?php _e('Actions', 'alimir'); ?></th>
+					<th width="2%"><?php _e('ID', WP_ULIKE_SLUG); ?></th>
+					<th width="10%"><?php _e('Username', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('Status', WP_ULIKE_SLUG); ?></th>
+					<th width="6%"><?php _e('Topic ID', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('Topic Title', WP_ULIKE_SLUG); ?></th>
+					<th width="20%"><?php _e('Date / Time', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('IP', WP_ULIKE_SLUG); ?></th>
+					<th><?php _e('Actions', WP_ULIKE_SLUG); ?></th>
 				</tr>
 			</thead>
 			<tbody class="wp_ulike_logs">
@@ -541,7 +541,7 @@
 				if($user_info)
 				echo get_avatar( $user_info->user_email, 16, '' , 'avatar') . '<em> @' . $user_info->user_login . '</em>';
 				else
-				echo '<em> #'. __('Guest User','alimir') .'</em>';
+				echo '<em> #'. __('Guest User',WP_ULIKE_SLUG) .'</em>';
 				?>
 				</td>
 				<td>
@@ -579,7 +579,7 @@
 		</table>
 		<div class="tablenav">
 			<div class='tablenav-pages'>
-				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs','alimir'); ?></span>
+				<span class="displaying-num"><?php echo $items . ' ' .  __('Logs',WP_ULIKE_SLUG); ?></span>
 				<?php echo $p->show();  // Echo out the list of paging. ?>
 			</div>
 		</div>
@@ -587,7 +587,7 @@
 		
 	<?php
 		} else {
-			echo "<div class='error'><p>" . __('<strong>ERROR:</strong> No Record Found. (This problem is created because you don\'t have any data on this table)','alimir') . "</p></div>";
+			echo "<div class='error'><p>" . __('<strong>ERROR:</strong> No Record Found. (This problem is created because you don\'t have any data on this table)',WP_ULIKE_SLUG) . "</p></div>";
 		}	
 	}
 	

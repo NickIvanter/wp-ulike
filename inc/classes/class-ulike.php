@@ -420,7 +420,7 @@ if ( ! class_exists( 'wp_ulike' ) ) {
 			if(wp_ulike_get_setting( $setting_key, 'users_liked_box') == '1' && !$get_users == ''){
 				$get_template = wp_ulike_get_setting( $setting_key, 'users_liked_box_template' );
 				if($get_template == '')
-				$get_template = '<br /><p style="margin-top:5px"> '.__('Users who have LIKED this post:','alimir').'</p> <ul class="tiles"> %START_WHILE% <li><a class="user-tooltip" title="%USER_NAME%">%USER_AVATAR%</a></li> %END_WHILE%</ul>';
+				$get_template = '<br /><p style="margin-top:5px"> '.__('Users who have LIKED this post:',WP_ULIKE_SLUG).'</p> <ul class="tiles"> %START_WHILE% <li><a class="user-tooltip" title="%USER_NAME%">%USER_AVATAR%</a></li> %END_WHILE%</ul>';
 				$inner_template = $this->get_template_between($get_template,"%START_WHILE%","%END_WHILE%");
 				foreach ( $get_users as $get_user ) 
 				{
