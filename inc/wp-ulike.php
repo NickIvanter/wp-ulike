@@ -241,7 +241,7 @@
         
         //Thanks to @Yehonal for this commit
         $replyID        = bbp_get_reply_id();
-        $post_ID 		= !$replyId ? $post->ID : $replyID;
+        $post_ID 		= !$replyID ? $post->ID : $replyID;
 
 		$get_post_meta 	= get_post_meta($post_ID, '_topicliked', true);
 		$get_like 		= $get_post_meta != '' ? $get_post_meta : 0;
