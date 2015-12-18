@@ -190,7 +190,7 @@ function ulike_bbp_add_scores_in_profile() {
 	$user_id = bbp_get_displayed_user_id();
 
 	$score = $wp_ulike_class->get_user_score( $user_id );
-	echo "<div class=\"ulike-section bbp-user-section\"><p>Лайки: <span class=\"\">$score</span></p></div>";
+	echo "<div class=\"ulike-section bbp-user-section\"><p>Благодарностей: <span class=\"\">$score</span></p></div>";
 }
 
 
