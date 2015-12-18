@@ -106,9 +106,10 @@ function wp_ulike_install() {
 		update_option( 'wp_ulike_dbVersion', WP_ULIKE_DB_VERSION );
 	}
 	
-	// Would it work? Hope so...
-	wp_schedule_event( current_time( 'timestamp' ), 'hourly', 'wp_ulike_mailing' );
+	wp_schedule_event( time(), 'hourly', 'wp_ulike_scheduled_actions' );
 }
+
+add_action( 'wp_ulike_scheduled_actions', 'wp_ulike_mailing' );
 
 
 /**
