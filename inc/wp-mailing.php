@@ -37,7 +37,6 @@ function wp_ulike_mailing() {
 					$site_url,
 					$site_name,
 				], $subject );
-				$subject = "=?UTF-8?B?" . base64_encode( $subject ) . "?="; // realy need this?
 
 				$content = wp_ulike_get_setting( 'wp_ulike_mailing', 'top_user_mail_template' );
 				$content = str_replace( [
