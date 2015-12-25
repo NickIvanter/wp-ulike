@@ -125,6 +125,9 @@
 .log-item:hover {
     background: none repeat scroll 0 0 #EEEEEE;
 }
+.log-item-half {
+	height: 23px;
+}
 .show-map {
     float: left;
 }
