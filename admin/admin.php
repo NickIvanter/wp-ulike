@@ -93,7 +93,9 @@
 	  'wp_ulike_buddypress' => $wp_ulike_buddypress,
 	  'wp_ulike_bbpress' 	=> $wp_ulike_bbpress,
       'wp_ulike_customize' 	=> $wp_ulike_customize,
-      'wp_ulike_mailing' 	=> $wp_ulike_mailing
+      'wp_ulike_mailing_level_1' 	=> $wp_ulike_mailing_levels[1],
+      'wp_ulike_mailing_level_2' 	=> $wp_ulike_mailing_levels[2],
+      'wp_ulike_mailing_level_3' 	=> $wp_ulike_mailing_levels[3],
     ) );
 
 	

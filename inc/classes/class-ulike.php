@@ -561,7 +561,7 @@ SELECT COUNT(c.user_id) AS cnt, c.user_id AS uid FROM {$this->wpdb->prefix}ulike
 
 		public function get_top_users( $limit = 10 )
 		{
-			$theshold = wp_ulike_get_setting( 'wp_ulike_mailing', 'top_users_threshold' );
+			$theshold = wp_ulike_get_setting( 'wp_ulike_mailing_level_1', 'top_users_threshold' ); // Assume level 1 as lowest
 			if ( $theshold ) {
 				return $this->get_users_with_score_more_than( $theshold, $limit );
 			}
@@ -569,25 +569,31 @@ SELECT COUNT(c.user_id) AS cnt, c.user_id AS uid FROM {$this->wpdb->prefix}ulike
 		}
 
 		// fatality combo of unspeakable abomination
-		public function get_users_we_should_prize( $theshold )
+		public function get_users_we_should_prize( $theshold, $cutoff, $level )
 		{
-			return $this->wpdb->get_results(
-				$this->wpdb->prepare(
-					"SELECT DISTINCT top.user_id as user_id, top.user_score AS score FROM (
+			if ( $cutoff ) {
+				$cutoff_rest = 'AND user_score <= %d';
+			} else {
+				$cutoff_rest = '';
+			}
+
+			$sql = "SELECT DISTINCT top.user_id as user_id, top.user_score AS score FROM (
 SELECT likes.uid AS user_id, SUM(likes.cnt) AS user_score FROM (
 	SELECT COUNT(p.post_author) AS cnt, p.post_author AS uid FROM {$this->wpdb->prefix}ulike AS up JOIN {$this->wpdb->posts} AS p ON p.ID=up.post_id WHERE up.status='like' GROUP BY uid
 	UNION ALL
 	SELECT COUNT(p.post_author) AS cnt, p.post_author AS uid FROM {$this->wpdb->prefix}ulike_forums AS uf JOIN {$this->wpdb->posts} AS p ON p.ID=uf.topic_id WHERE uf.status='like' GROUP BY uid
 	UNION ALL
 	SELECT COUNT(c.user_id) AS cnt, c.user_id AS uid FROM {$this->wpdb->prefix}ulike_comments AS uc JOIN {$this->wpdb->comments} AS c ON c.comment_ID=uc.comment_id WHERE uc.status='like' GROUP BY uid
-	) AS likes GROUP BY user_id HAVING user_score > %d
+	) AS likes GROUP BY user_id HAVING user_score > %d $cutoff_rest
 ) AS top JOIN {$this->wpdb->usermeta} AS meta ON meta.user_id=top.user_id
-WHERE EXISTS (SELECT * FROM {$this->wpdb->usermeta} AS meta1 WHERE meta1.user_id=top.user_id AND meta_key='_ulike_prized' AND meta_value='false')
-OR NOT EXISTS (SELECT * FROM {$this->wpdb->usermeta} AS meta2 WHERE meta2.user_id=top.user_id AND meta_key='_ulike_prized')
-",
-					$theshold
-				)
-			);
+WHERE EXISTS (SELECT * FROM {$this->wpdb->usermeta} AS meta1 WHERE meta1.user_id=top.user_id AND meta_key='_ulike_prized_$level' AND meta_value='false')
+OR NOT EXISTS (SELECT * FROM {$this->wpdb->usermeta} AS meta2 WHERE meta2.user_id=top.user_id AND meta_key='_ulike_prized_$level')";
+
+			if ( $cutoff ) {
+				return $this->wpdb->get_results( $this->wpdb->prepare( $sql, (int) $theshold, (int) $cutoff ) );
+			} else {
+				return $this->wpdb->get_results( $this->wpdb->prepare( $sql, (int) $theshold ) );
+			}
 		}
 	}
 	
