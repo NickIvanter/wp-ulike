@@ -582,8 +582,8 @@ SELECT likes.uid AS user_id, SUM(likes.cnt) AS user_score FROM (
 	SELECT COUNT(c.user_id) AS cnt, c.user_id AS uid FROM {$this->wpdb->prefix}ulike_comments AS uc JOIN {$this->wpdb->comments} AS c ON c.comment_ID=uc.comment_id WHERE uc.status='like' GROUP BY uid
 	) AS likes GROUP BY user_id HAVING user_score > %d
 ) AS top JOIN {$this->wpdb->usermeta} AS meta ON meta.user_id=top.user_id
-WHERE EXISTS (SELECT * FROM {$this->wpdb->usermeta} WHERE meta_key='_ulike_prized' AND meta_value='false')
-OR NOT EXISTS (SELECT * FROM {$this->wpdb->usermeta} WHERE meta_key='_ulike_prized')
+WHERE EXISTS (SELECT * FROM {$this->wpdb->usermeta} AS meta1 WHERE meta1.user_id=top.user_id AND meta_key='_ulike_prized' AND meta_value='false')
+OR NOT EXISTS (SELECT * FROM {$this->wpdb->usermeta} AS meta2 WHERE meta2.user_id=top.user_id AND meta_key='_ulike_prized')
 ",
 					$theshold
 				)
