@@ -40,6 +40,8 @@
 		
 		//call wp_get_ulike function from class-ulike calss
 		$counter 		= $wp_ulike_class->wp_get_ulike($data);
+
+		$counter = str_replace( '<span class="count-box">0</span>', '<span class="count-box" style="display: none">0</span>', $counter );
 		
 		$wp_ulike 		= '<div id="wp-ulike-'.$post_ID.'" class="wpulike '.$theme_class.'">';
 		$wp_ulike  		.= '<div class="counter">'.$counter.'</div>';
@@ -112,7 +114,9 @@
 		
 		//call wp_get_ulike function from class-ulike calss
 		$counter 		= $wp_ulike_class->wp_get_ulike($data);		
-		
+
+		$counter = str_replace( '<span class="count-box">0</span>', '<span class="count-box" style="display: none">0</span>', $counter );
+
 		$wp_ulike 		= '<div id="wp-ulike-comment-'.$CommentID.'" class="wpulike '.$theme_class.'">';
 		$wp_ulike 		.= '<div class="counter">'.$counter.'</div>';
 		$wp_ulike 		.= '</div>';
@@ -194,7 +198,9 @@
 	
 		//call wp_get_ulike function from class-ulike calss
 		$counter 		= $wp_ulike_class->wp_get_ulike($data);
-		
+
+		$counter = str_replace( '<span class="count-box">0</span>', '<span class="count-box" style="display: none">0</span>', $counter );
+
 		$wp_ulike 		= '<'.$html_tag.' id="wp-ulike-activity-'.$activityID.'" class="wpulike '.$theme_class.'">';
 		$wp_ulike 		.= '<'.$html_tag.' class="counter">'.$counter.'</'.$html_tag.'>';
 		$wp_ulike 		.= '</'.$html_tag.'>';
@@ -270,7 +276,9 @@
 		
 		//call wp_get_ulike function from class-ulike calss
 		$counter 		= $wp_ulike_class->wp_get_ulike($data);
-		
+
+		$counter = str_replace( '<span class="count-box">0</span>', '<span class="count-box" style="display: none">0</span>', $counter );
+
 		$wp_ulike 		= '<div id="wp-ulike-'.$post_ID.'" class="wpulike '.$theme_class.'">';
 		$wp_ulike  		.= '<div class="counter">'.$counter.'</div>';
 		$wp_ulike  		.= '</div>';
