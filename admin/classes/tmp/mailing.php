@@ -16,7 +16,7 @@ $wp_ulike_mailing_levels[1] = [
 			'type'  		=> 'number',
 			'default'		=> 5,
 			'label' 		=> __( 'Likes threshold for top users', WP_ULIKE_SLUG),
-			'description'	=> __('Number of likes collected by user to be recognized as a top user', WP_ULIKE_SLUG),
+			'description'	=> __('Number of likes collected by user to be recognized as a top user level 1', WP_ULIKE_SLUG),
 		],
 		'top_user_mail_subject' => [
 			'type'  		=> 'text',
@@ -45,7 +45,7 @@ $wp_ulike_mailing_levels[2] = [
 			'type'  		=> 'number',
 			'default'		=> 10,
 			'label' 		=> __( 'Likes threshold for top users', WP_ULIKE_SLUG),
-			'description'	=> __('Number of likes collected by user to be recognized as a top user', WP_ULIKE_SLUG),
+			'description'	=> __('Number of likes collected by user to be recognized as a top user level 2', WP_ULIKE_SLUG),
 		],
 		'top_user_mail_subject' => [
 			'type'  		=> 'text',
@@ -75,7 +75,13 @@ $wp_ulike_mailing_levels[3] = [
 			'type'  		=> 'number',
 			'default'		=> 20,
 			'label' 		=> __( 'Likes threshold for top users', WP_ULIKE_SLUG),
-			'description'	=> __('Number of likes collected by user to be recognized as a top user', WP_ULIKE_SLUG),
+			'description'	=> __('Number of likes collected by user to be recognized as a top user level 3', WP_ULIKE_SLUG),
+		],
+		'top_users_threshold_step' => [
+			'type'  		=> 'number',
+			'default'		=> 10,
+			'label' 		=> __( 'Likes step for top users over this level', WP_ULIKE_SLUG),
+			'description'	=> __('Number of likes collected by user to be recognized as a top user level 4 etc (incremental)', WP_ULIKE_SLUG),
 		],
 		'top_user_mail_subject' => [
 			'type'  		=> 'text',

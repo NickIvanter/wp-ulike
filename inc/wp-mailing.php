@@ -1,5 +1,6 @@
 <?php
 
+// Найти и уведомить всех пользователей достигших уровня 1-3
 function wp_ulike_mailing()
 {
 	wp_ulike_mailing_level(1);
@@ -7,16 +8,18 @@ function wp_ulike_mailing()
 	wp_ulike_mailing_level(3);
 }
 
+// Найти и уведомить всех пользователей достигших уровня $level
 function wp_ulike_mailing_level( $level ) {
 	global $wp_ulike_class;
 
-	$settings = "wp_ulike_mailing_level_$level";
-	$threshold = wp_ulike_get_setting( $settings, 'top_users_threshold' );
+	$threshold = wp_ulike_get_setting( "wp_ulike_mailing_level_$level", 'top_users_threshold' );
+	$step = wp_ulike_get_setting( 'wp_ulike_mailing_level_3', 'top_users_threshold_step' ); // Шаг для уровней выше 3
 
-	if ( $level < 3 ) {
+	// Определяем предел данного уровня
+	if ( $level < 3 ) { // Предел уровня - начало следующего
 		$cutoff = wp_ulike_get_setting( 'wp_ulike_mailing_level_' . ($level+1), 'top_users_threshold' );
-	} else {
-		$cutoff = false;
+	} else { // Уровень 3 и выше - предел получаем добавляя шаг уровня
+		$cutoff = $threshold + $step;
 	}
 
 	if ( $threshold ) {
@@ -25,73 +28,87 @@ function wp_ulike_mailing_level( $level ) {
 		return;
 	}
 
+	if ( $top_users ) { // Есть кого уведомлять на этом уровне
+		while ( list( $i, $top_user ) = each( $top_users ) ) {
+			wp_ulike_prize_user( $top_user->user_id, $top_user->score, $level );
+		}
+	}
+}
+
+// Отправить уведомление выполнив подстановки шаблона
+function wp_ulike_prize_user( $user_id, $user_score, $level )
+{
 	$site_url  = get_bloginfo( 'url' );
 	$site_name = get_bloginfo( 'name' );
 	$site_desc = get_bloginfo( 'description' );
-	if ( $top_users ) {
-		while ( list( $i, $top_user ) = each( $top_users ) ) {
-			$user_id    = stripslashes( $top_user->user_id );
-			$user_score = stripslashes( $top_user->score );
-			$user_info  = get_userdata( $user_id );
-			if ( $user_info ) {
-				$user_profile = bbp_get_user_profile_url( $user_id );
 
-				$subject = wp_ulike_get_setting( $settings, 'top_user_mail_subject' );
-				$subject = str_replace( [
-					'%user_name%',
-					'%user_id%',
-					'%user_profile%',
-					'%user_score%',
-					'%user_level%',
-					'%site_url%',
-					'%site_name%',
-				], [
-					$user_info->display_name,
-					$user_id,
-					$user_profile,
-					$user_score,
-					$level,
-					$site_url,
-					$site_name,
-				], $subject );
+	// Если уровень больше 3 используем настройки уровня 3
+	$settings = ( $level < 4 ) ? "wp_ulike_mailing_level_$level" : "wp_ulike_mailing_level_3";
 
-				$content = wp_ulike_get_setting( $settings, 'top_user_mail_template' );
-				$content = str_replace( [
-					'%user_name%',
-					'%user_id%',
-					'%user_profile%',
-					'%user_score%',
-					'%user_level%',
-					'%site_url%',
-					'%site_name%',
-				], [
-					$user_info->display_name,
-					$user_id,
-					$user_profile,
-					$user_score,
-					$level,
-					$site_url,
-					$site_name,
-				], $content );
+	$user_id    = stripslashes( $user_id );
+	$user_score = stripslashes( $user_score );
+	$user_info  = get_userdata( $user_id );
+	if ( $user_info ) {
+		$user_profile = bbp_get_user_profile_url( $user_id ); // url профиля пользователя
 
-				$buf = ob_start();
-				if ( $buf ) {
-					include( plugin_dir_path( __FILE__ ) . 'mail-template.php' );
-					$mail_body = ob_get_clean();
-					if ( $mail_body ) {
-						$headers = [
-							'Content-Type: text/html; charset=UTF-8',
-						];
-						if ( wp_mail( $user_info->user_email, $subject, $mail_body, $headers ) ) {
-							wp_ulike_mark_mailing_done( $user_id, $level );
-						}
-					}
+		$subject = wp_ulike_get_setting( $settings, 'top_user_mail_subject' );
+		$subject = str_replace( [
+			'%user_name%',
+			'%user_id%',
+			'%user_profile%',
+			'%user_score%',
+			'%user_level%',
+			'%site_url%',
+			'%site_name%',
+		], [
+			$user_info->display_name,
+			$user_id,
+			$user_profile,
+			$user_score,
+			$level,
+			$site_url,
+			$site_name,
+		], $subject );
+
+		$content = wp_ulike_get_setting( $settings, 'top_user_mail_template' );
+		$content = str_replace( [
+			'%user_name%',
+			'%user_id%',
+			'%user_profile%',
+			'%user_score%',
+			'%user_level%',
+			'%site_url%',
+			'%site_name%',
+		], [
+			$user_info->display_name,
+			$user_id,
+			$user_profile,
+			$user_score,
+			$level,
+			$site_url,
+			$site_name,
+		], $content );
+
+		$buf = ob_start();
+		if ( $buf ) {
+			include( plugin_dir_path( __FILE__ ) . 'mail-template.php' ); // Подключаем шаблон
+			$mail_body = ob_get_clean();
+			if ( $mail_body ) {
+				$headers = [
+					'Content-Type: text/html; charset=UTF-8',
+				];
+				if ( wp_mail( $user_info->user_email, $subject, $mail_body, $headers ) ) {
+					wp_ulike_mark_mailing_done( $user_id, $level );
 				}
 			}
 		}
 	}
 }
 
-function wp_ulike_mark_mailing_done( $user_id, $level ) {
-	update_user_meta( $user_id, "_ulike_prized_$level", 'true' );
+// Отметить, что уведомление послано
+function wp_ulike_mark_mailing_done( $user_id, $level )
+{
+	for( ; $level>0; $level-- ) { // Отмечаем уровень и все уровни ниже данного как пройденные
+		update_user_meta( $user_id, "_ulike_prized_$level", 'true' );
+	}
 }

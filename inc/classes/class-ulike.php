@@ -26,17 +26,31 @@ if ( ! class_exists( 'wp_ulike' ) ) {
 			$loggin_method = wp_ulike_get_setting( $data['setting'], 'logging_method');
 			
 			//select function from logging method
-			if($loggin_method == 'do_not_log')
-			return $this->do_not_log_method($data);
-			
-			else if($loggin_method == 'by_cookie')
-			return $this->loggedby_cookie_method($data);
-			
-			else if($loggin_method == 'by_ip')
-			return $this->loggedby_ip_method($data);
-			
+			if ( $loggin_method == 'do_not_log' )
+			{
+				$result = $this->do_not_log_method($data);
+			}
+			elseif ( $loggin_method == 'by_cookie' )
+			{
+				$result = $this->loggedby_cookie_method($data);
+			}
+			elseif ( $loggin_method == 'by_ip' )
+			{
+				$result = $this->loggedby_ip_method($data);
+			}
 			else
-			return $this->loggedby_other_ways($data);
+			{
+				$result = $this->loggedby_other_ways($data);
+			}
+
+			if ( $data['type'] == 'process' ) { // Если лайки обновились
+				// Проверить, нужно ли уведомить автора
+				$post = get_post( (int) $data['id'] );
+				if ( $post ) {
+					$this->should_prize_user( $post->post_author );
+				}
+			}
+			return $result;
 		}
 
 		/**
@@ -524,6 +538,45 @@ if ( ! class_exists( 'wp_ulike' ) ) {
 				return $user_ID;
 		}
 		
+		// Уведомить пользователя если нужно
+		public function should_prize_user( $user_id )
+		{
+			$score = $this->get_user_score( $user_id );
+			if ( !$score ) return;
+			$score = (int) $score;
+
+
+			// Набран 1 уровень
+			$t1 = wp_ulike_get_setting( "wp_ulike_mailing_level_1", 'top_users_threshold' );
+			$t2 = wp_ulike_get_setting( "wp_ulike_mailing_level_2", 'top_users_threshold' );
+			if ( $score >= $t1 && $score < $t2 ) {
+				wp_ulike_prize_user( $user_id, $score, 1 );
+				return;
+			}
+
+			// Набран 2 уровень
+			$t3 = wp_ulike_get_setting( "wp_ulike_mailing_level_3", 'top_users_threshold' );
+			if ( $score >= $t2 && $score < $t3 ) {
+				wp_ulike_prize_user( $user_id, $score, 2 );
+				return;
+			}
+
+			// Набран 3 уровень
+			$step = wp_ulike_get_setting( 'wp_ulike_mailing_level_3', 'top_users_threshold_step' ); // Шаг для уровней выше 3
+			if ( !$step ) $step = 10;
+
+			if ( $score >= $t3 && $score < ( $t3 + $step ) ) {
+				wp_ulike_prize_user( $user_id, $score, 3 );
+				return;
+			}
+
+			// Уровни выше 3
+			$level = ceil( ( $score - $t3 ) / $step ) + 3; // Вычисляем номер уровня
+			if ( $level > 3 ) { // Мало ли что...
+				wp_ulike_prize_user( $user_id, $score, $level );
+			}
+		}
+
 		// havylifting
 		public function get_user_score( $user_id )
 		{
@@ -551,7 +604,7 @@ UNION ALL
 SELECT COUNT(p.post_author) AS cnt, p.post_author AS uid FROM {$this->wpdb->prefix}ulike_forums AS uf JOIN {$this->wpdb->posts} AS p ON p.ID=uf.topic_id WHERE uf.status='like' GROUP BY uid
 UNION ALL
 SELECT COUNT(c.user_id) AS cnt, c.user_id AS uid FROM {$this->wpdb->prefix}ulike_comments AS uc JOIN {$this->wpdb->comments} AS c ON c.comment_ID=uc.comment_id WHERE uc.status='like' GROUP BY uid
-) AS likes GROUP BY user_id HAVING user_score > %d ORDER BY user_score DESC";
+) AS likes GROUP BY user_id HAVING user_score >= %d ORDER BY user_score DESC";
 			if ( $limit ) {
 				$limit = (int) $limit;
 				return $this->wpdb->get_results( $this->wpdb->prepare( $sql . " LIMIT %d" , $theshold, $limit ) );
@@ -572,7 +625,7 @@ SELECT COUNT(c.user_id) AS cnt, c.user_id AS uid FROM {$this->wpdb->prefix}ulike
 		public function get_users_we_should_prize( $theshold, $cutoff, $level )
 		{
 			if ( $cutoff ) {
-				$cutoff_rest = 'AND user_score <= %d';
+				$cutoff_rest = 'AND user_score < %d'; // Если задан предел, устанавливаем дополнительный критерий запроса
 			} else {
 				$cutoff_rest = '';
 			}
@@ -584,14 +637,14 @@ SELECT likes.uid AS user_id, SUM(likes.cnt) AS user_score FROM (
 	SELECT COUNT(p.post_author) AS cnt, p.post_author AS uid FROM {$this->wpdb->prefix}ulike_forums AS uf JOIN {$this->wpdb->posts} AS p ON p.ID=uf.topic_id WHERE uf.status='like' GROUP BY uid
 	UNION ALL
 	SELECT COUNT(c.user_id) AS cnt, c.user_id AS uid FROM {$this->wpdb->prefix}ulike_comments AS uc JOIN {$this->wpdb->comments} AS c ON c.comment_ID=uc.comment_id WHERE uc.status='like' GROUP BY uid
-	) AS likes GROUP BY user_id HAVING user_score > %d $cutoff_rest
+	) AS likes GROUP BY user_id HAVING user_score >= %d $cutoff_rest
 ) AS top JOIN {$this->wpdb->usermeta} AS meta ON meta.user_id=top.user_id
 WHERE EXISTS (SELECT * FROM {$this->wpdb->usermeta} AS meta1 WHERE meta1.user_id=top.user_id AND meta_key='_ulike_prized_$level' AND meta_value='false')
 OR NOT EXISTS (SELECT * FROM {$this->wpdb->usermeta} AS meta2 WHERE meta2.user_id=top.user_id AND meta_key='_ulike_prized_$level')";
 
-			if ( $cutoff ) {
+			if ( $cutoff ) { // Если задан предел, используем его значение в запросе
 				return $this->wpdb->get_results( $this->wpdb->prepare( $sql, (int) $theshold, (int) $cutoff ) );
-			} else {
+			} else { // Запрос без предела
 				return $this->wpdb->get_results( $this->wpdb->prepare( $sql, (int) $theshold ) );
 			}
 		}
