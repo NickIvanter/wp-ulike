@@ -38,6 +38,16 @@ function wp_ulike_mailing_level( $level ) {
 // Отправить уведомление выполнив подстановки шаблона
 function wp_ulike_prize_user( $user_id, $user_score, $level )
 {
+	$user_ids = [ $user_id ];
+
+	// Проверяем пользователя по чёрному списку
+	$mail_ids = apply_filters( 'wp_ulike_mailing_ids', $user_ids );
+	if ( !in_array( $user_id, $mail_ids ) ) { // Пользователь в чёрном списке?
+		return;
+	}
+	// Оставляем только белый список
+	$mail_ids = array_diff( $mail_ids, $user_ids );
+
 	$site_url  = get_bloginfo( 'url' );
 	$site_name = get_bloginfo( 'name' );
 	$site_desc = get_bloginfo( 'description' );
@@ -97,8 +107,16 @@ function wp_ulike_prize_user( $user_id, $user_score, $level )
 				$headers = [
 					'Content-Type: text/html; charset=UTF-8',
 				];
+				// Отправляем уведомление пользователю
 				if ( wp_mail( $user_info->user_email, $subject, $mail_body, $headers ) ) {
 					wp_ulike_mark_mailing_done( $user_id, $level );
+				}
+				// Отправляем копии по белому списку
+				while ( list( $i, $id ) = each( $mail_ids ) ) {
+					$user_info  = get_userdata( $id );
+					if ( $user_info ) {
+						wp_mail( $user_info->user_email, $subject, $mail_body, $headers );
+					}
 				}
 			}
 		}
@@ -112,3 +130,6 @@ function wp_ulike_mark_mailing_done( $user_id, $level )
 		update_user_meta( $user_id, "_ulike_prized_$level", 'true' );
 	}
 }
+
+// Фильтр id для рассылки
+add_filter( 'wp_ulike_mailing_ids', 'apply_my_subscribers_black_and_white_lists' );
