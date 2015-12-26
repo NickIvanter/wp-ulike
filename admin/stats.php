@@ -229,7 +229,7 @@
 					$final_user_name	= $get_top_user_info->display_name;
 				echo'
 			<div class="log-latest">
-			<div>
+			<div class="log-item log-item-half">
 			<span class="left-div log-page-title">'. $top_users_counter++ . ' - ' .$final_user_name.'</span>
 			<span class="right-div badge"><strong>'.$top_user->user_score.'</strong> '.__('Like',WP_ULIKE_SLUG) . '</span>
 			</div>
