@@ -537,6 +537,12 @@ if ( ! class_exists( 'wp_ulike' ) ) {
 			else
 				return $user_ID;
 		}
+
+		// Проверить вылано ли уведомление
+		public function user_prized( $user_id, $level )
+		{
+			return get_user_meta( $user_id, "_ulike_prized_$level", true );
+		}
 		
 		// Уведомить пользователя если нужно
 		public function should_prize_user( $user_id )
@@ -549,14 +555,14 @@ if ( ! class_exists( 'wp_ulike' ) ) {
 			// Набран 1 уровень
 			$t1 = wp_ulike_get_setting( "wp_ulike_mailing_level_1", 'top_users_threshold' );
 			$t2 = wp_ulike_get_setting( "wp_ulike_mailing_level_2", 'top_users_threshold' );
-			if ( $score >= $t1 && $score < $t2 ) {
+			if ( $score >= $t1 && $score < $t2 && ! $this->user_prized( $user_id, 1 ) ) {
 				wp_ulike_prize_user( $user_id, $score, 1 );
 				return;
 			}
 
 			// Набран 2 уровень
 			$t3 = wp_ulike_get_setting( "wp_ulike_mailing_level_3", 'top_users_threshold' );
-			if ( $score >= $t2 && $score < $t3 ) {
+			if ( $score >= $t2 && $score < $t3 && ! $this->user_prized( $user_id, 2 ) ) {
 				wp_ulike_prize_user( $user_id, $score, 2 );
 				return;
 			}
@@ -565,14 +571,14 @@ if ( ! class_exists( 'wp_ulike' ) ) {
 			$step = wp_ulike_get_setting( 'wp_ulike_mailing_level_3', 'top_users_threshold_step' ); // Шаг для уровней выше 3
 			if ( !$step ) $step = 10;
 
-			if ( $score >= $t3 && $score < ( $t3 + $step ) ) {
+			if ( $score >= $t3 && $score < ( $t3 + $step ) && ! $this->user_prized( $user_id, 3 )) {
 				wp_ulike_prize_user( $user_id, $score, 3 );
 				return;
 			}
 
 			// Уровни выше 3
 			$level = ceil( ( $score - $t3 ) / $step ) + 3; // Вычисляем номер уровня
-			if ( $level > 3 ) { // Мало ли что...
+			if ( $level > 3 && ! $this->user_prized( $user_id, $level ) ) {
 				wp_ulike_prize_user( $user_id, $score, $level );
 			}
 		}
