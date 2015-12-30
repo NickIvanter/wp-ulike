@@ -577,7 +577,7 @@ if ( ! class_exists( 'wp_ulike' ) ) {
 			}
 
 			// Уровни выше 3
-			$level = ceil( ( $score - $t3 ) / $step ) + 3; // Вычисляем номер уровня
+			$level = floor( ( $score - $t3 ) / $step ) + 3; // Вычисляем номер уровня
 			if ( $level > 3 && ! $this->user_prized( $user_id, $level ) ) {
 				wp_ulike_prize_user( $user_id, $score, $level );
 			}
