@@ -71,7 +71,7 @@ function wp_ulike_prize_user( $user_id, $user_score, $level )
 			'%site_url%',
 			'%site_name%',
 		], [
-			$user_info->display_name,
+			mb_convert_case( rtrim( $user_info->first_name ), MB_CASE_TITLE, 'UTF-8' ),
 			$user_id,
 			$user_profile,
 			$user_score,
@@ -90,7 +90,7 @@ function wp_ulike_prize_user( $user_id, $user_score, $level )
 			'%site_url%',
 			'%site_name%',
 		], [
-			$user_info->display_name,
+			mb_convert_case( rtrim( $user_info->first_name ), MB_CASE_TITLE, 'UTF-8' ),
 			$user_id,
 			$user_profile,
 			$user_score,
