@@ -104,8 +104,13 @@ function wp_ulike_prize_user( $user_id, $user_score, $level )
 			include( plugin_dir_path( __FILE__ ) . 'mail-template.php' ); // Подключаем шаблон
 			$mail_body = ob_get_clean();
 			if ( $mail_body ) {
+				$from = wp_ulike_get_setting( 'wp_ulike_general', 'mail_from' );
+				if ( ! $from ) {
+					$from = 'noreply@domain.com';
+				}
 				$headers = [
 					'Content-Type: text/html; charset=UTF-8',
+					'From: ' . $from
 				];
 				// Отправляем уведомление пользователю
 				if ( wp_mail( $user_info->user_email, $subject, $mail_body, $headers ) ) {

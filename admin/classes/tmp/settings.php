@@ -60,7 +60,14 @@
 			  'label' 			=> __('Format Number', WP_ULIKE_SLUG),
 			  'checkboxlabel' 	=> __('Activate', WP_ULIKE_SLUG),
 			  'description' 	=> __('Convert numbers of Likes with string (kilobyte) format.', WP_ULIKE_SLUG) . '<strong> (WHEN? likes>=1000)</strong>'
-			)
+			),
+			'mail_from' => [
+				'type'  		=> 'text',
+				'default'		=> '',
+				'label' 		=> __( 'Send mail from', WP_ULIKE_SLUG),
+				'description'	=> __( 'Set FROM field in mail notifications to be sent to prize users', WP_ULIKE_SLUG),
+			],
+
 		)
 	);//end wp_ulike_general
 	
